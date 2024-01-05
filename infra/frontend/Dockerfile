@@ -1,6 +1,6 @@
 FROM node:21-alpine3.18 as build-stage
 WORKDIR /app
-COPY ./frontend/ . 
+COPY ./../../frontend/ . 
 RUN npm ci 
 RUN npm run build
 
