@@ -1,8 +1,8 @@
 # Stage 1: Build stage
-FROM node:14-alpine3.14 as build-stage
+FROM node:21-alpine3.18 as build-stage
 WORKDIR /app
-COPY ./../../frontend/ . 
-RUN npm ci 
+COPY ../../frontend/ .
+RUN npm install 
 RUN npm run build
 
 # Stage 2: Nginx stage
