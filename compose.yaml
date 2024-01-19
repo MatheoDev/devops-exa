@@ -2,10 +2,25 @@ version: "1"
 
 services:
   frontend:
-    build: ./infra/frontend/
+    build:
+      dockerfile: ./infra/frontend/Dockerfile
     ports:
       - 8080:80
-
   db:
-    build: ./infra/db/
-    # todo
+    build:
+      dockerfile: ./infra/db/Dockerfile
+    ports:
+      - 5432:5432
+    volumes:
+      - ./infra/db/data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: devops
+  backend:
+    build:
+      dockerfile: ./infra/backend/Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
