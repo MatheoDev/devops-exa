@@ -1,4 +1,6 @@
-import { Column, Entity, PrimaryGeneratedColumn } from "typeorm";
+import { InventoryProduct } from "src/inventory-product/inventory-product.entity";
+import { Inventory } from "src/inventory/inventory.entity";
+import { Column, Entity, ManyToMany, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity('product')
 export class Product {
@@ -10,4 +12,7 @@ export class Product {
 
   @Column()
   price: number;
+
+  @OneToMany(() => InventoryProduct, inventoryProduct => inventoryProduct.product)
+  inventoryProducts: InventoryProduct[];
 }

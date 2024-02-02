@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { DataSource } from 'typeorm';
 import { ProductHttpModule } from './product/product-http.module';
+import { InventoryHttpModule } from './inventory/inventory-http.module';
+import { InventoryProductHttpModule } from './inventory-product/inventory-product-http.module';
 
 @Module({
   imports: [
@@ -20,6 +22,8 @@ import { ProductHttpModule } from './product/product-http.module';
       }),
     }),
     ProductHttpModule,
+    InventoryHttpModule,
+    InventoryProductHttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],
