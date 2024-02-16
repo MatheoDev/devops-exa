@@ -12,6 +12,8 @@ export const useProductStore = defineStore('product', () => {
   const fetchProducts = async () => {
     const response = await axios.get('/product')
     products.value = response.data
+
+    console.log(products.value)
   }
 
   return {
