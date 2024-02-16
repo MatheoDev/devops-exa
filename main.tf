@@ -1,4 +1,3 @@
-
 provider "kubernetes" {
   config_path = "~/.kube/config"
 
@@ -9,16 +8,16 @@ provider "kubernetes" {
   # cluster_ca_certificate = minikube_cluster.docker.cluster_ca_certificate
 }
 
-resource "kubernetes_namespace" "devopsexam" {
+resource "kubernetes_namespace" "devops" {
   metadata {
-    name = "devopsexam"
+    name = "devops"
   }
 }
 
 resource "kubernetes_deployment" "frontend" {
   metadata {
     name      = "frontend"
-    namespace = kubernetes_namespace.devopsexam.metadata[0].name
+    namespace = kubernetes_namespace.devops.metadata[0].name
     labels = {
       app = "frontend"
     }
@@ -40,9 +39,8 @@ resource "kubernetes_deployment" "frontend" {
 
       spec {
         container {
-          name              = "frontend"
-          image             = "devops-exa-frontend:latest"
-          image_pull_policy = "IfNotPresent"
+          name  = "frontend"
+          image = "mrdek/devops-exa-frontend:latest"
           port {
             container_port = 80
           }
@@ -55,7 +53,7 @@ resource "kubernetes_deployment" "frontend" {
 resource "kubernetes_service" "frontend" {
   metadata {
     name      = "frontend"
-    namespace = kubernetes_namespace.devopsexam.metadata[0].name
+    namespace = kubernetes_namespace.devops.metadata[0].name
   }
 
   spec {
@@ -66,6 +64,7 @@ resource "kubernetes_service" "frontend" {
     port {
       port        = 80
       target_port = 80
+      node_port   = 30001
     }
 
     type = "NodePort"
@@ -75,7 +74,7 @@ resource "kubernetes_service" "frontend" {
 resource "kubernetes_deployment" "backend" {
   metadata {
     name      = "backend"
-    namespace = kubernetes_namespace.devopsexam.metadata[0].name
+    namespace = kubernetes_namespace.devops.metadata[0].name
     labels = {
       app = "backend"
     }
@@ -97,9 +96,8 @@ resource "kubernetes_deployment" "backend" {
 
       spec {
         container {
-          name              = "backend"
-          image             = "devops-exa-backend:latest"
-          image_pull_policy = "IfNotPresent"
+          name  = "backend"
+          image = "mrdek/devops-exa-backend:latest"
           port {
             container_port = 3000
           }
@@ -112,7 +110,7 @@ resource "kubernetes_deployment" "backend" {
 resource "kubernetes_service" "backend" {
   metadata {
     name      = "backend"
-    namespace = kubernetes_namespace.devopsexam.metadata[0].name
+    namespace = kubernetes_namespace.devops.metadata[0].name
   }
 
   spec {
@@ -132,7 +130,7 @@ resource "kubernetes_service" "backend" {
 resource "kubernetes_deployment" "db" {
   metadata {
     name      = "db"
-    namespace = kubernetes_namespace.devopsexam.metadata[0].name
+    namespace = kubernetes_namespace.devops.metadata[0].name
     labels = {
       app = "db"
     }
@@ -154,11 +152,24 @@ resource "kubernetes_deployment" "db" {
 
       spec {
         container {
-          name              = "db"
-          image             = "devops-exa-db:latest"
-          image_pull_policy = "IfNotPresent"
+          name  = "db"
+          image = "mrdek/devops-exa-db:latest"
           port {
             container_port = 5432
+          }
+
+          # POSTGRES_USER: postgres POSTGRES_PASSWORD: postgres POSTGRES_DB devops
+          env {
+            name  = "POSTGRES_USER"
+            value = "postgres"
+          }
+          env {
+            name  = "POSTGRES_PASSWORD"
+            value = "postgres"
+          }
+          env {
+            name  = "POSTGRES_DB"
+            value = "devops"
           }
         }
       }
@@ -169,7 +180,7 @@ resource "kubernetes_deployment" "db" {
 resource "kubernetes_service" "db" {
   metadata {
     name      = "db"
-    namespace = kubernetes_namespace.devopsexam.metadata[0].name
+    namespace = kubernetes_namespace.devops.metadata[0].name
   }
 
   spec {
