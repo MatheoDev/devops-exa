@@ -1,15 +1,19 @@
 <script setup lang="ts">
+import { onMounted } from 'vue';
 import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+import { useProductStore } from './stores/product';
+
+const productStore = useProductStore()
+
+onMounted(() => {
+  console.log('App mounted')
+  productStore.fetchProducts()
+})
 </script>
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
-
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
       <nav>
         <RouterLink to="/">Home</RouterLink>
         <RouterLink to="/about">About</RouterLink>

@@ -2,13 +2,17 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { DataSource } from 'typeorm';
+import { ProductHttpModule } from './product/product-http.module';
+import { InventoryHttpModule } from './inventory/inventory-http.module';
+import { InventoryProductHttpModule } from './inventory-product/inventory-product-http.module';
 
 @Module({
   imports: [
     TypeOrmModule.forRootAsync({
       useFactory: () => ({
         type: 'postgres',
-        host: 'db',
+        host: 'localhost',
         port: 5432,
         username: 'postgres',
         password: 'postgres',
@@ -17,8 +21,13 @@ import { TypeOrmModule } from '@nestjs/typeorm';
         synchronize: true,
       }),
     }),
+    ProductHttpModule,
+    InventoryHttpModule,
+    InventoryProductHttpModule,
   ],
   controllers: [AppController],
   providers: [AppService],
 })
-export class AppModule { }
+export class AppModule {
+  constructor(private dataSource: DataSource) { }
+}
