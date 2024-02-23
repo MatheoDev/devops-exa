@@ -7,7 +7,7 @@ variables:
 build_and_push:
   stage: build_and_push
   script:
-    - docker login -u $CI_USER -p $CI_PASSWORD $CI_REGISTRY
+    - docker login -u $USER -p $PASSWORD $REGISTRY
 
     # Build and push Backend image
     - docker build -t $DOCKER_IMAGE_PREFIX/devops-exa-backend:latest -f ../infra/backend/dockerfile .
