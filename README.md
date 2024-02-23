@@ -16,6 +16,11 @@ Stack technique :
 - Terraform (infra as code)
 - Github Actions (on pull request - master branch)
 
+Start du minikube
+```sh
+minikube start
+```
+
 Lancer les commandes suivantes pour initialiser le projet avec terraform dans un minikube
 
 ```sh
