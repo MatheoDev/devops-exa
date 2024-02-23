@@ -121,6 +121,7 @@ resource "kubernetes_service" "backend" {
     port {
       port        = 3000
       target_port = 3000
+      node_port   = 30002
     }
 
     type = "NodePort"

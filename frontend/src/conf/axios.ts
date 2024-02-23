@@ -2,7 +2,7 @@ import axios, { type AxiosInstance } from 'axios'
 import type { InjectionKey } from 'vue'
 
 const instance: AxiosInstance = axios.create({
-  baseURL: 'http://localhost:3001',
+  baseURL: 'http://localhost:30002',
   timeout: 5000,
   headers: {
     'Content-Type': 'application/json'
