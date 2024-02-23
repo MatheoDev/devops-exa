@@ -1,39 +1,24 @@
-name: CI/CD
+stages:
+  - build_and_push
 
-on:
-  push:
-    branches:
-      - infra
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+variables:
+  DOCKER_IMAGE_PREFIX: "mrdek"
 
-    steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+build_and_push:
+  stage: build_and_push
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
 
-    - name: Set up Docker backend
-      run: |
-        docker build -t devops-exa-backend:latest .
-        docker push mrdek/devops-exa-backend
+    # Build and push Backend image
+    - docker build -t $DOCKER_IMAGE_PREFIX/devops-exa-backend:latest -f ../../backend/dockerfile .
+    - docker push $DOCKER_IMAGE_PREFIX/devops-exa-backend:latest
 
-    - name: Set up Docker frontend
-      run: |
-        docker build -t devops-exa-frontend:latest .
-        docker push mrdek/devops-exa-frontend
+    # Build and push Database image
+    - docker build -t $DOCKER_IMAGE_PREFIX/devops-exa-db:latest -f dockerfile_db .
+    - docker push $DOCKER_IMAGE_PREFIX/devops-exa-db:latest
 
-    - name: Set up Docker db
-      run: |
-        docker build -t devops-exa-db:latest .
-        docker push mrdek/devops-exa-db
-
-    - name: Set up Terraform
-      uses: hashicorp/setup-terraform@v1
-      with:
-        terraform_version: 1.0.0
-
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Apply
-      run: terraform apply -auto-approve
+    # Build and push Frontend image
+    - docker build -t $DOCKER_IMAGE_PREFIX/devops-exa-frontend:latest -f ../../frontend/dockerfile .
+    - docker push $DOCKER_IMAGE_PREFIX/devops-exa-frontend:latest
+  only:
+    - master
